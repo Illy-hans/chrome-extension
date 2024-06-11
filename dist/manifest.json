@@ -1,0 +1,13 @@
+{
+    "name": "Nasa Google Background ",
+    "version": "0.0.1",
+    "description": "My first browser extension!",
+    "manifest_version": 3,
+    "permissions": ["activeTab"],
+    "web_accessible_resources": [
+        {
+        "resources": ["index.html", "main.tsx"],
+        "matches": ["https://www.google.com/*"]
+        }
+    ]
+}
