@@ -1,5 +1,5 @@
 
-const API_KEY: string | undefined= process.env.REACT_APP_API_KEY;
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export async function fetchURL(): Promise<string> {
 
