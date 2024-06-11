@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchURL } from './service/fetchImage'
 
-function App() {
+function App(): JSX.Element {
   const [imageURL, setImageURL] = useState<string | null>(null);
 
   useEffect (() => {
@@ -17,10 +17,9 @@ function App() {
     getImageURL();
   }, []);
 
-
   return (
     <>
-      <div style={{ 
+      <div data-testid="background-div" style={{ 
         backgroundImage: imageURL ? `url("${imageURL}")` : undefined,
         width: '100vw', 
         height: '100vh',

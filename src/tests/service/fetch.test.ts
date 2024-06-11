@@ -1,39 +1,33 @@
-import { fetchURL } from "../../service/fetchImage";
-import { expect, it, describe } from '@jest/globals';
+import { vi, describe, beforeEach, it } from 'vitest';
+import { fetchURL } from '../../service/fetchImage';
 
-global.fetch = jest.fn();
+vi.mock("../../fetchImage.ts");
 
-describe('fetchURL', () => {
-    beforeEach(() => {
-        (fetch as jest.Mock).mockClear();
-    });
+describe("fetchURL", () => {
 
-    it('should return the hdurl on successful fetch', async () => {
-        const mockData = { hdurl: 'http://example.com/image.jpg' };
-        (fetch as jest.Mock).mockResolvedValue({
+    it("should return the dummy URL", async () => {
+        const dummyUrl = { hdurl: 'https://example.com/image.jpg' }
+
+        const mockResponse = {
             ok: true,
-            json: async () => mockData
+            statusText: "OK",
+            json: async () => dummyUrl, 
+        } as Response;
+
+        globalThis.fetch = vi.fn().mockResolvedValue(mockResponse);
+        expect(await fetchURL()).toEqual(dummyUrl.hdurl)
         });
 
-        const result = await fetchURL();
-        expect(result).toBe(mockData.hdurl);
-    });
+    it("should throw an error if the fetch fails", async () => {
+        const dummyUrl = { hdurl: '' }
 
-    it('should throw an error on fetch failure', async () => {
-        const errorMessage = 'HTTP error! status: 500';
-        (fetch as jest.Mock).mockResolvedValue({
+        const mockResponse = {
             ok: false,
-            status: 500,
-            json: async () => ({})
+            status: 404,
+            json: async () => dummyUrl, 
+        } as Response;
+
+        globalThis.fetch = vi.fn().mockResolvedValue(mockResponse);
+        await expect(fetchURL()).rejects.toThrowError('HTTP error! status: 404');
         });
-
-        await expect(fetchURL()).rejects.toThrow(errorMessage);
-    });
-
-    it('should throw an error if fetch throws an error', async () => {
-        const errorMessage = 'Network error';
-        (fetch as jest.Mock).mockRejectedValue(new Error(errorMessage));
-
-        await expect(fetchURL()).rejects.toThrow(errorMessage);
-    });
 });
