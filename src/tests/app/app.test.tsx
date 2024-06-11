@@ -1,23 +1,27 @@
 import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
 import App from '../../App.tsx';
-import { fetchURL } from '../../service/fetchImage.ts';
+import { vi, it, describe, expect} from 'vitest';
 
-// Mock the fetchURL function
-jest.mock('../service/fetchImage.ts', () => ({
-    fetchURL: jest.fn()
-}));
+vi.mock("../../fetchImage.ts");
 
-test('sets background image correctly', async () => {
-  // Mock implementation of fetchURL
-    const mockImageURL: string = 'https://example.com/your-image.jpg';
-    (fetchURL as jest.Mock).mockResolvedValue(mockImageURL);
+describe("App", () => {
+  it('sets background image correctly', async () => {
+    const dummyUrl = { hdurl: 'https://example.com/image.jpg' }
 
-    render(<App />)
+        const mockResponse = {
+            ok: true,
+            statusText: "OK",
+            json: async () => dummyUrl, 
+        } as Response;
 
-  // Wait for the imageURL to be set and the component to re-render
-    const divElement: HTMLElement = await waitFor(() => screen.getByTestId('background-div'));
+        globalThis.fetch = vi.fn().mockResolvedValue(mockResponse);
+      
+      render(<App />)
 
-  // Assert the background image style
-    expect(divElement).toContain(`background-image: url("${mockImageURL}")`);
+    // Wait for the imageURL to be set and the component to re-render
+      const divElement: HTMLElement = await waitFor(() => screen.getByTestId('background-div'));
+
+    // Assert the background image style
+      expect(divElement.style.backgroundImage).toContain(`url(${dummyUrl.hdurl})`);
+  });
 });

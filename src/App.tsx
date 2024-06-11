@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { fetchURL } from './service/fetchImage'
+import { fetchURL } from './service/fetchImage';
 
 function App(): JSX.Element {
   const [imageURL, setImageURL] = useState<string | null>(null);

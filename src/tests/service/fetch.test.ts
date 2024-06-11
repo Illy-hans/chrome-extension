@@ -1,4 +1,4 @@
-import { vi, describe, beforeEach, it } from 'vitest';
+import { vi, describe, it, expect } from 'vitest';
 import { fetchURL } from '../../service/fetchImage';
 
 vi.mock("../../fetchImage.ts");

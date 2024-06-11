@@ -1,8 +1,11 @@
-import { defineConfig } from 'vitest/config'
+import {defineConfig} from 'vitest/config'
+import {svelte} from '@sveltejs/vite-plugin-svelte'
+import {svelteTesting} from '@testing-library/svelte/vite'
 
 export default defineConfig({
+    plugins: [svelte(), svelteTesting()],
     test: {
-        globals: true,
-        environment: 'jsdom', //this is optional, only when you are testing DOM related functionalities
+        environment: 'jsdom',
+        setupFiles: ['./vitest-setup.ts'],
     },
 })
